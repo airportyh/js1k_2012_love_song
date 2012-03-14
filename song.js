@@ -74,9 +74,8 @@ function processEvents(orgEvents, tempo){
     writeBits()
 }
 
-function genEvents(notes){
-    var events = []
-      , pos = 0
+function genEvents(notes, events){
+    var pos = 0
       , pause = 0.25
     notes.forEach(function(note){
         var dur = note[0]
@@ -85,7 +84,17 @@ function genEvents(notes){
         events.push([pos + dur - pause, n])
         pos += dur
     })
-    return events
+}
+function genChordEvents(chords, events){
+    var pos = 0
+      , pause = 0.25
+    chords.forEach(function(chord){
+        ![0,1,2,3,2,1,0,1,2,3,2,1].forEach(function(i){
+            events.push([pos, chord[i]])
+            events.push([pos + 1 - pause, chord[i]])
+            pos++
+        })
+    })
 }
 
 function startSong(){
@@ -109,7 +118,17 @@ function startSong(){
         [23, -2],
         [1, -2]
     ]
-    processEvents(genEvents(notes), 90)
+    var events = []
+    var I = [-9, -5, -2, 3]
+      , VIII = [-12, -9, -5, 0]
+      , IV = [-16, -12, -9, -4]
+      , V = [-14, -10, -7, -2]
+    var chords = [I, VIII, IV, V, I, VIII, V, V]
+    chords = chords.concat(chords)
+    genEvents(notes, events)
+    genChordEvents(chords, events)
+    events = events.sort(function(a, b){return a[0] - b[0]})
+    processEvents(events, 60)
 }    
 window.startSong = startSong
 }(Math)
