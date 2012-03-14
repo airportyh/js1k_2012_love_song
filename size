@@ -1,2 +1,3 @@
-uglifyjs song.js > song.min.js
-ls -l song.min.js
+uglifyjs song.js > song.uglify.min.js
+java -jar compiler.jar < song.js > song.closure.min.js
+ls -l song.*.min.js
