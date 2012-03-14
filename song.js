@@ -65,6 +65,10 @@ function play(){
                 for (var j = 0; j < 2; j++){
                     var cursor = trackCursors[j]
                     var currNote = tracks[j][cursor]
+                    if (!currNote){
+                        trackCursors[j] = 0
+                        continue
+                    }
                     var freq = currNote[1]
                     var noteDur = currNoteDur[j]
                     if (noteDur == null){
