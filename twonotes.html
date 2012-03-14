@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+<title></title>
+</head>
+<body>
+<button onclick="play()">Play</button>
+<script>
+function play(){
+    var audio = new Audio()
+    var sampleRate = 44100
+    audio.mozSetup(1, sampleRate)
+    var freqs = [440, 659.26, 554.37]
+    
+    var buffer = new Float32Array(sampleRate)
+    for (var i = 0; i < sampleRate; i++){
+        var value = freqs.reduce(function(sum, freq){
+            return Math.sin(i * Math.PI * 2 * freq / sampleRate) * 0.3 + sum
+        }, 0)
+        buffer[i] = value
+    }
+    
+    audio.mozWriteAudio(buffer)
+}
+</script>
+</body>
+</html>
