@@ -1,4 +1,4 @@
-!function(){
+function play(){
     
     var dol = 523.25
       , re = 587.33
@@ -10,7 +10,6 @@
       , mi_ = mi / 2
       , dol_ = dol / 2
       , la = la_ * 2
-      , fa_ = fa / 2
       
     var notes = [
         [11, dol],
@@ -32,70 +31,59 @@
         [23, so],
         [1, so]
     ]
-    var events = []
     
     var I = [dol_, mi_, so, mi_]
       , VIII = [la_, dol_, mi_, la]
-      , IV = [fa_, la_, dol_, fa]
+      , IV = [fa/2, la_, dol_, fa]
       , V = [so/2, ti, re/2, ti]
     var chords = [I, VIII, IV, V, I, VIII, V, V]
-    
-    var pos = 0
-    notes.forEach(function(note){
-        var dur = note[0]
-          , n = note[1]
-        events.push([pos, n])
-        events.push([pos + dur - 0.25, n])
-        pos += dur
-    })
-    
-    pos = 0
+    var comp = []
     chords.forEach(function(chord){
-        ![0,1,2,3,2,1,0,1,2,3,2,1].forEach(function(i){
-            events.push([pos, chord[i]])
-            events.push([pos + 1 - 0.25, chord[i]])
-            pos++
+        [0,1,2,3,2,1,0,1,2,3,2,1].forEach(function(i){
+            comp.push([1, chord[i]])
         })
     })
     
-    events = events.sort(function(a, b){return a[0] - b[0]})
-    var orgEvents = events.slice(0)
+    var tracks = [notes, comp]
     
     var audio = new Audio()
       , sampleRate = 44100
-      , currentNotes = []
+      , trackCursors = [0, 0]
+      , currNoteDur = []
       , bufferSize = sampleRate / 2
-      , currWritePos = 0
-      , events = orgEvents.slice(0)
-      , eOffset = 0
+      , writePos = 0
+      , done = false
       
     audio.mozSetup(1, sampleRate)
 
     function writeBits(){
-        if (events.length === 0){
-            events = orgEvents.slice(0)
-            eOffset = -currWritePos
-            currentNotes = []
-        }
-        var toWrite = audio.mozCurrentSampleOffset() + bufferSize - currWritePos
+        var toWrite = audio.mozCurrentSampleOffset() + bufferSize - writePos
         if (toWrite > 0){
             var data = new Float32Array(toWrite)
-            for (var i = 0; i < toWrite; i++, currWritePos++){
-                var event = events[0]
-                if (!event) break
-                var note = event[1]
-                  , eventPos = event[0] / 3 * sampleRate
-                  , idx
-                if (eventPos <= (eOffset + currWritePos)){
-                    if (-1 !== (idx = currentNotes.indexOf(note)))
-                        currentNotes.splice(idx, 1)
-                    else
-                        currentNotes.push(note)
-                    events.shift()
+            for (var i = 0; i < toWrite; i++, writePos++){
+                var value = 0
+                for (var j = 0; j < 2; j++){
+                    var cursor = trackCursors[j]
+                    var currNote = tracks[j][cursor]
+                    var freq = currNote[1]
+                    var noteDur = currNoteDur[j]
+                    if (noteDur == null){
+                        noteDur = currNoteDur[j] = [0, currNote[0] * sampleRate / 3]
+                    }else if (noteDur[1] === 0){
+                        trackCursors[j]++
+                        currNoteDur[j] = null
+                        break
+                    }else{
+                        currNoteDur[j][1]--
+                        currNoteDur[j][0]++
+                    }
+                    value += Math.sin(writePos * Math.PI * 2 * freq / sampleRate) * 0.3 *
+                        (
+                            (noteDur[0] < 2000 ? noteDur[0] / 2000 : 1) *
+                            (noteDur[1] < 8000 ? noteDur[1] / 8000 : 1)
+                        )
+                        
                 }
-                var value = currentNotes.reduce(function(sum, freq){
-                    return Math.sin(currWritePos * Math.PI * 2 * freq / sampleRate) * 0.3 + sum
-                }, 0)
                 data[i] = value
             }
             audio.mozWriteAudio(data)
@@ -104,4 +92,4 @@
     }
 
     writeBits()
-}()
+}
