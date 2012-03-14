@@ -11,6 +11,7 @@
       , dol_ = dol / 2
       , la = la_ * 2
       
+    // Melody sections
     var sectionA = [
         [11, dol],
         [1, re],
@@ -36,9 +37,9 @@
         [2, so],
         [1, la],
         [1, dol],
-        [4, ti],
+        [4, ti*2],
         [1, dol],
-        [1, ti],
+        [1, ti*2],
         [4, la],
         [1, fa],
         [1, la],
@@ -56,6 +57,7 @@
     
     var notes = [].concat(sectionA, sectionB, sectionB, sectionA)
     
+    // Chords!
     var I = [dol_, mi_, so, mi_]
       , VIII = [la_, dol_, mi_, la]
       , IV = [fa/2, la_, dol_, fa]
@@ -70,18 +72,20 @@
         })
     })
     
-    var tracks = [notes, comp]
+    var tracks = [notes, comp] // 2 tracks, melody and accompaniment
     
     var audio = new Audio()
       , sampleRate = 44100
-      , trackCursors = [0, 0]
-      , currNoteDur = []
-      , writePos = 0
+      , trackCursors = [0, 0] // for each track, the index to the current note being played
+      , currNoteDur = [] // This is to get at note duration info for the current notes being played
+                         // to implement note envelope tapering
+      , writePos = 0     // write position for the sample data
       , taper = 5000
       
     audio.mozSetup(1, sampleRate)
 
     function writeBits(){
+        // toWrite is the amount to write to fill up our pre-buffer
         var toWrite = audio.mozCurrentSampleOffset() + sampleRate / 2 - writePos
         if (toWrite){
             var data = new Float32Array(toWrite)
@@ -89,8 +93,8 @@
                 for (var j = 0; j < 2; j++){
                     var cursor = trackCursors[j]
                       , currNote = tracks[j][cursor]
-                    if (!currNote){
-                        trackCursors[j] = 0
+                    if (!currNote){ // no more notes to play
+                        trackCursors[j] = 0 // return to of the track
                         continue
                     }
                     var noteDur = currNoteDur[j]
@@ -105,7 +109,7 @@
                         noteDur[0]++
                     }
                     data[i] += Math.sin(writePos * Math.PI * 2 * currNote[1] / sampleRate) * 0.5 *
-                        (
+                        ( // Note envelope tapering to prevent artifacts at note edges
                             (noteDur[0] < taper ? noteDur[0] / taper : 1) *
                             (noteDur[1] < taper ? noteDur[1] / taper : 1)
                         )
@@ -113,9 +117,10 @@
             }
             audio.mozWriteAudio(data)
         }
+        // Feed it data every 100ms
         setTimeout(writeBits, 100)
     }
 
-    writeBits()
+    writeBits() // kick off the async loop
 
 }()
