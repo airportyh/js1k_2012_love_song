@@ -1,5 +1,5 @@
 !function(){
-    var processEvents = function(orgEvents, tempo){
+    var processEvents = function(orgEvents){
         var audio = new Audio()
           , sampleRate = 44100
           , currentNotes = []
@@ -24,7 +24,7 @@
                     var event = events[0]
                     if (!event) break
                     var note = event[1]
-                      , eventPos = event[0] / (tempo / 60) / 3 * sampleRate
+                      , eventPos = event[0] / 3 * sampleRate
                       , idx
                     if (eventPos <= (eOffset + currWritePos)){
                         if (-1 !== (idx = currentNotes.indexOf(note)))
@@ -110,5 +110,5 @@
     genEvents(notes, events)
     genChordEvents(chords, events)
     events = events.sort(function(a, b){return a[0] - b[0]})
-    processEvents(events, 60)
+    processEvents(events)
 }()
