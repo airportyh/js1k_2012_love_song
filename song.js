@@ -48,27 +48,19 @@ function processEvents(orgEvents, tempo){
             var data = new Float32Array(toWrite)
             //console.log('toWrite: ' + toWrite + ' currWritePos: ' + currWritePos + ', events: ' + events.length)
             for (var i = 0; i < toWrite; i++, currWritePos++){
-                var eventsToKeep = []
-                for (var j = 0; j < events.length; j++){
-                    var event = events[j]
-                      , note = event[1]
-                      , eventPos = event[0] / (tempo / 60) / 3 * sampleRate
-                      , idx
-                    if (eventPos <= (eOffset + currWritePos)){
-                        if (-1 !== (idx = currentNotes.indexOf(note))){
-                            //console.log('Note off ' + note)
-                            currentNotes.splice(idx, 1)
-                        }else{
-                            //console.log('Note on ' + note)
-                            currentNotes.push(note)
-                        }
-                    }else{
-                        eventsToKeep.push(event)
-                    }
+                var event = events[0]
+                if (!event) break
+                var note = event[1]
+                  , eventPos = event[0] / (tempo / 60) / 3 * sampleRate
+                  , idx
+                if (eventPos <= (eOffset + currWritePos)){
+                    if (-1 !== (idx = currentNotes.indexOf(note)))
+                        currentNotes.splice(idx, 1)
+                    else
+                        currentNotes.push(note)
+                    events.shift()
                 }
-                events = eventsToKeep
-                var freqs = currentNotes.map(freq4note)
-                var value = freqs.reduce(function(sum, freq){
+                var value = currentNotes.map(freq4note).reduce(function(sum, freq){
                     return Math.sin(currWritePos * Math.PI * 2 * freq / sampleRate) * 0.3 + sum
                 }, 0)
                 data[i] = value
@@ -115,12 +107,12 @@ function startSong(){
         [32, 0],
         [34.75, 0],
         [35, 3],
-        
         [37.75, 3],
         [38, 1],
         [40.75, 1],
         [41, 0],
         [43.75, 0],
+        
         [44, -2],
         [46.75, -2],
         [47, 3],
