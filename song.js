@@ -11,7 +11,6 @@
       , dol_ = dol / 2
       , la = la_ * 2
       , fa_ = fa / 2
-      , so_ = so / 2
       
     var notes = [
         [11, dol],
@@ -38,7 +37,7 @@
     var I = [dol_, mi_, so, mi_]
       , VIII = [la_, dol_, mi_, la]
       , IV = [fa_, la_, dol_, fa]
-      , V = [so_, ti, re/2, ti]
+      , V = [so/2, ti, re/2, ti]
     var chords = [I, VIII, IV, V, I, VIII, V, V]
     
     var pos = 0
