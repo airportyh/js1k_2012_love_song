@@ -119,12 +119,11 @@ function startSong(){
         [1, -2]
     ]
     var events = []
-    var I = [-9, -5, -2, 3]
+    var I = [-9, -5, -2, -5]
       , VIII = [-12, -9, -5, 0]
       , IV = [-16, -12, -9, -4]
-      , V = [-14, -10, -7, -2]
+      , V = [-14, -10, -7, -4]
     var chords = [I, VIII, IV, V, I, VIII, V, V]
-    chords = chords.concat(chords)
     genEvents(notes, events)
     genChordEvents(chords, events)
     events = events.sort(function(a, b){return a[0] - b[0]})
