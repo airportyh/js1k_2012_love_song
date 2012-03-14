@@ -15,18 +15,7 @@
 		</script>
 		<script>
 // start of submission //
-!function(canvas, ctx){
-	var msg = "JAVASCRIPT, WILL YOU MARRY ME? COFFEESCRIPT."
-	ctx.font = '40pt Helvetica'
-	ctx.textBaseline = 'top'
-	var offset = 10
-	for (var i = 0, len = msg.length; i < len; i++){
-		var chr = msg[i]
-		ctx.rotate(0.1)
-		ctx.fillText(chr, offset, 10)
-		offset += ctx.measureText(chr).width
-	}
-}(c, a)
+function B(){n.length===0&&(n=u.slice(0),A=-z,x=[]);var a=v.mozCurrentSampleOffset()+y-z;if(a>0){var b=new Float32Array(a);for(var c=0;c<a;c++,z++){var d=n[0];if(!d)break;var e=d[1],f=d[0]/3*w,g;f<=A+z&&(-1!==(g=x.indexOf(e))?x.splice(g,1):x.push(e),n.shift());var h=x.reduce(function(a,b){return Math.sin(z*Math.PI*2*b/w)*.3+a},0);b[c]=h}v.mozWriteAudio(b)}setTimeout(B,100)}var a=523.25,b=587.33,c=659.26,d=394.995,e=349.23,f=220,g=246.94,h=c/2,i=a/2,j=f*2,k=e/2,l=d/2,m=[[11,a],[1,b],[12,a],[1,b],[1,c],[9,a],[1,a],[8,d],[1,d],[2,c],[1,b],[11,a],[1,b],[9,a],[2,h],[1,e],[23,d],[1,d]],n=[],o=[i,h,d,h],p=[f,i,h,j],q=[k,f,i,e],r=[l,g,b/2,g],s=[o,p,q,r,o,p,r,r],t=0;m.forEach(function(a){var b=a[0],c=a[1];n.push([t,c]),n.push([t+b-.25,c]),t+=b}),t=0,s.forEach(function(a){![0,1,2,3,2,1,0,1,2,3,2,1].forEach(function(b){n.push([t,a[b]]),n.push([t+1-.25,a[b]]),t++})}),n=n.sort(function(a,b){return a[0]-b[0]});var u=n.slice(0),v=new Audio,w=44100,x=[],y=w/2,z=0,n=u.slice(0),A=0;v.mozSetup(1,w),B()
 // end of submission //
 		</script>
 	</body>
