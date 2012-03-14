@@ -74,6 +74,20 @@ function processEvents(orgEvents, tempo){
     writeBits()
 }
 
+function genEvents(notes){
+    var events = []
+      , pos = 0
+      , pause = 0.25
+    notes.forEach(function(note){
+        var dur = note[0]
+          , n = note[1]
+        events.push([pos, n])
+        events.push([pos + dur - pause, n])
+        pos += dur
+    })
+    return events
+}
+
 function startSong(){
     var notes = [
         [1, -7],
