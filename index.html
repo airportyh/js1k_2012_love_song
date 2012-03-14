@@ -1,0 +1,33 @@
+
+<!doctype html>
+<html>
+	<head>
+		<title>JS1k, 1k demo submission [ID]</title>
+		<meta charset="utf-8" />
+	</head>
+	<body>
+		<canvas id="c" width="1920" height="1080"></canvas>
+		<script>
+			var b = document.body;
+			var c = document.getElementsByTagName('canvas')[0];
+			var a = c.getContext('2d');
+			document.body.clientWidth; // fix bug in webkit: http://qfox.nl/weblog/218
+		</script>
+		<script>
+// start of submission //
+!function(canvas, ctx){
+	var msg = "JAVASCRIPT, WILL YOU MARRY ME? COFFEESCRIPT."
+	ctx.font = '40pt Helvetica'
+	ctx.textBaseline = 'top'
+	var offset = 10
+	for (var i = 0, len = msg.length; i < len; i++){
+		var chr = msg[i]
+		ctx.rotate(0.1)
+		ctx.fillText(chr, offset, 10)
+		offset += ctx.measureText(chr).width
+	}
+}(c, a)
+// end of submission //
+		</script>
+	</body>
+</html>

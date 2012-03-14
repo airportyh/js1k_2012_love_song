@@ -1,0 +1,2 @@
+uglifyjs song.js > song.min.js
+ls -l song.min.js
