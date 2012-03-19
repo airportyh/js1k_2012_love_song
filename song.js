@@ -1,4 +1,5 @@
 !function(){
+    // note frequencies stored for reuse
     var dol = 523.25
       , re = 587.33
       , mi = 659.26
@@ -108,7 +109,7 @@
                         noteDur[1]--
                         noteDur[0]++
                     }
-                    data[i] += Math.sin(writePos * Math.PI * 2 * currNote[1] / sampleRate) * 0.5 *
+                    data[i] += Math.sin(writePos * Math.PI * 2 * currNote[1] / sampleRate) * 0.3 *
                         ( // Note envelope tapering to prevent artifacts at note edges
                             (noteDur[0] < taper ? noteDur[0] / taper : 1) *
                             (noteDur[1] < taper ? noteDur[1] / taper : 1)
